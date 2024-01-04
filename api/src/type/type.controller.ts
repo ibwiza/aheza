@@ -6,6 +6,7 @@ import { Prisma } from '@prisma/client';
 export class TypeController {
   constructor(private readonly typeService: TypeService) {}
 
+  
   @Post()
   async createType(@Body() data: Prisma.TypeCreateInput) {
     return this.typeService.createType(data);

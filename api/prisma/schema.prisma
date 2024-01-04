@@ -15,6 +15,7 @@ model User {
   cid       String   @unique @default(cuid())
   email     String   @unique
   password  String
+  role      Role     @default(CONTRIBUTOR)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -64,4 +65,10 @@ model Contribution {
   type      Type     @relation(fields: [typeId], references: [id])
   memberId  Int
   member    Member   @relation(fields: [memberId], references: [id])
+}
+
+enum Role {
+  CONTRIBUTOR
+  ADMIN
+  CLARK
 }

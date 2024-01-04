@@ -50,10 +50,11 @@ export class ContributionService {
     });
   }
 
-  async findContributionsByMember(memberId: number) {
+  async findContributionsByMember(email: string) {
+    const member=await this.databaseService.member.findUnique({where:{email:email}})
     return this.databaseService.contribution.findMany({
       where: {
-        memberId: memberId,
+        memberId: member.id,
       },
       include: {
         type: true,

@@ -6,6 +6,7 @@ import { MemberService } from './member.service';
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
+  
   @Get()
   async findMembers() {
     return this.memberService.findMember();
