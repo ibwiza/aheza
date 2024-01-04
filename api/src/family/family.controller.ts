@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client';
 @Controller('family')
 export class FamilyController {
   constructor(private readonly familyService: FamilyService) {}
+  
   @Get()
   async findFamilies() {
     return this.familyService.findFamilies();
