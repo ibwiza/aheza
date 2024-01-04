@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  cid       String   @unique @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Family {
+  id        Int      @id @default(autoincrement())
+  cid       String   @unique @default(cuid())
+  names     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members   Member[]
+}
+
+model Member {
+  id            Int            @id @default(autoincrement())
+  cid           String         @unique @default(cuid())
+  names         String
+  email         String         @unique
+  phone         String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  familyId      Int
+  family        Family         @relation(fields: [familyId], references: [id])
+  contributions Contribution[]
+}
+
+model Type {
+  id            Int            @id @default(autoincrement())
+  cid           String         @unique @default(cuid())
+  names         String         @unique
+  percentage    Int
+  active        Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  contributions Contribution[]
+}
+
+model Contribution {
+  id        Int      @id @default(autoincrement())
+  cid       String   @unique @default(cuid())
+  amount    Float
+  year      Int
+  month     Int
+  memberId  Int
+  member    Member   @relation(fields: [memberId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  typeId    Int
+  type      Type     @relation(fields: [typeId], references: [id])
+}
