@@ -6,10 +6,10 @@ import { DatabaseService } from 'src/database/database.service';
 export class ContributionService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async createContribution(data: Prisma.ContributionCreateInput) {
+  async createContribution(data: Prisma.ContributionCreateInput,email:string) {
     const member = await this.databaseService.member.findUnique({
       where: {
-        email: 'manishimweemmanuel8gmail.com',
+        email: email,
       },
     });
     const activeTypes = await this.databaseService.type.findMany({
@@ -24,7 +24,7 @@ export class ContributionService {
       (await activeTypes).map((type) => {
         contributionData.push({
           typeId: type.id,
-          memberId: member.id,
+          memberId:member.id,
           year: data.year,
           month: data.month,
           amount: (data.amount * type.percentage) / 100,

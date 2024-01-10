@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -16,19 +17,19 @@ export class ContributionController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async findContributionsByMember(
-    @Req() req
-  ) {
+  async findContributionsByMember(@Req() req) {
     return this.contributionService.findContributionsByMember(req.user.email);
   }
 
   @Get('all')
-  async findContributions(
-  ) {
+  async findContributions() {
     return this.contributionService.findContributions();
   }
-  @Post()
-  async createContribution(@Body() data: Prisma.ContributionCreateInput) {
-    return this.contributionService.createContribution(data);
+  @Post(':email')
+  async createContribution(
+    @Param('email') email: string,
+    @Body() data: Prisma.ContributionCreateInput,
+  ) {
+    return this.contributionService.createContribution(data,email);
   }
 }

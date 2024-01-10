@@ -20,6 +20,11 @@ web/yarn.lock
 api/package-lock.json
 api/yarn.lock
 
+web/node_modules/
+web/.next/
+web/.swc/
+web/.*.env
+
 # local env files
 .env.local
 .env.*.local
