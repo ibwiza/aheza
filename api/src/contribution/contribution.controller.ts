@@ -25,11 +25,11 @@ export class ContributionController {
   async findContributions() {
     return this.contributionService.findContributions();
   }
-  @Post(':email')
+  @Post(':cid')
   async createContribution(
-    @Param('email') email: string,
+    @Param('cid') cid: string,
     @Body() data: Prisma.ContributionCreateInput,
   ) {
-    return this.contributionService.createContribution(data,email);
+    return this.contributionService.createContribution(data, cid);
   }
 }

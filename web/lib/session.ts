@@ -5,7 +5,7 @@ export async function getCurrentUser() {
   const cookieStore = cookies();
   const token = cookieStore.get("key");
 
-  const response = await fetch(`http://localhost:4000/auth/profile`, {
+  const response = await fetch(`${process.env.URL}/auth/profile`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

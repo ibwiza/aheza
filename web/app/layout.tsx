@@ -8,9 +8,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Analytics } from "@/components/layout/analytics";
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator";
-import { Providers } from "@/lib/provider";
-import { getSession } from "@/lib/session";
-import { redirect } from "next/navigation";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -34,7 +31,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: RootLayoutProps) {
- 
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -45,14 +41,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           fontHeading.variable
         )}
       >
-        <Providers>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-            <Analytics />
-            <Toaster />
-            <TailwindIndicator />
-          </ThemeProvider>
-        </Providers>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <Analytics />
+          <Toaster />
+          <TailwindIndicator />
+        </ThemeProvider>
       </body>
     </html>
   );

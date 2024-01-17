@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -12,8 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
-import { getCookie, setCookie } from "cookies-next";
-import { combineSlices } from "@reduxjs/toolkit";
+import { setCookie } from "cookies-next";
+import { signIn } from "@/lib/features/auth/sign-in";
+import { ISignInResponse } from "@/lib/features/auth/types";
 
 interface UserSignInFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -28,29 +29,20 @@ export function UserSignInForm({ className, ...props }: UserSignInFormProps) {
     resolver: zodResolver(userAuthSchema),
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
+    const response: ISignInResponse = await signIn(data);
 
-    const response = await fetch("http://localhost:4000/auth/sign-in", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    const jsonResponse = await response.json();
-    setIsLoading(false);
-
-    if (!response.ok) {
+    if (response.statusCode !== 200) {
       return toast({
         title: "Something went wrong.",
-        description: `${jsonResponse.message}. Please try again.`,
+        description: `${response.message}. Please try again.`,
         variant: "destructive",
       });
     }
-    setCookie("key", jsonResponse.accessToken);
+    setCookie("key", response.accessToken);
     await router.push("/home");
   }
 

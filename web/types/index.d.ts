@@ -68,3 +68,32 @@ export type User = {
   names: string;
   email: string;
 };
+
+export type Contribution = {
+  cid: string;
+  year: number;
+  month: number;
+  amount: number;
+  type: Type;
+  createdAt: Date;
+};
+
+export type Type = {
+  cid: string;
+  names: string;
+  percentage: number;
+  createdAt: Date;
+
+};
+export type Family = {
+  cid: string;
+  names: string;
+};
+
+export type Member = {
+  id: string;
+  names: string;
+  email: string;
+  family: Family;
+  phone: string;
+};

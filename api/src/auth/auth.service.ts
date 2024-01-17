@@ -95,14 +95,13 @@ export class AuthService {
   }
 
   async profile(email: string) {
-    return await this.databaseService.member.findUnique({
+    return await this.databaseService.user.findUnique({
       where: {
         email: email,
       },
       select: {
         email: true,
-        names: true,
-        phone: true,
+        role: true,
         cid: true,
       },
     });

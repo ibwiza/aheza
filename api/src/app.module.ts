@@ -12,6 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwt_config } from './auth/config/jwt';
 import { JwtStrategy } from './auth/jwt-strategy';
 import { AuthService } from './auth/auth.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -32,8 +33,11 @@ import { AuthService } from './auth/auth.service';
         expiresIn: jwt_config.expired,
       },
     }),
+    ConfigModule.forRoot({
+      isGlobal: true, // no need to import into other modules
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService,JwtStrategy,AuthService],
+  providers: [AppService, JwtStrategy, AuthService],
 })
 export class AppModule {}

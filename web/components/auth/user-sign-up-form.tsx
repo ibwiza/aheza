@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
+import { ISignUpResponse } from "@/lib/features/auth/types";
+import { signUp } from "@/lib/features/auth/sign-up";
 
 interface UserSignUpFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -32,20 +34,12 @@ export function UserSignUpForm({ className, ...props }: UserSignUpFormProps) {
   async function onSubmit(data: FormData) {
     setIsLoading(true);
 
-    const response = await fetch(`http://localhost:4000/auth/sign-up`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    const response: ISignUpResponse = await signUp(data);
 
-    const jsonResponse = await response.json();
-
-    setIsLoading(false);
-
-    if (!response.ok) {
+    if (response.statusCode !== 200) {
       return toast({
         title: "Something went wrong.",
-        description: `${jsonResponse.message}. Please try again.`,
+        description: `${response.message}. Please try again.`,
         variant: "destructive",
       });
     }
@@ -53,7 +47,7 @@ export function UserSignUpForm({ className, ...props }: UserSignUpFormProps) {
     await router.push("/sign-in");
 
     return toast({
-      title: `${jsonResponse.message}`,
+      title: `${response.message}`,
       description: "Sign In and start using application.",
     });
   }

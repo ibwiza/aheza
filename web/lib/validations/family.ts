@@ -1,5 +1,5 @@
 import * as z from "zod";
 
-export const familyPatchSchema = z.object({
-  names: z.string().min(3).max(128),
+export const familySchema = z.object({
+  names: z.string().min(3),
 });
