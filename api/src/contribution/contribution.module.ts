@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ContributionService } from './contribution.service';
 import { ContributionController } from './contribution.controller';
-import { AuthModule } from 'src/auth/auth.module';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
+  imports:[EmailModule],
   providers: [ContributionService],
   controllers: [ContributionController],
 })

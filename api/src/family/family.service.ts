@@ -38,4 +38,12 @@ export class FamilyService {
       },
     });
   }
+
+  async findFamily(cid: string) {
+    return this.databaseService.family.findUnique({
+      where: {
+        cid: cid,
+      },
+    });
+  }
 }

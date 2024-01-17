@@ -1,15 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class ContributionService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(private readonly databaseService: DatabaseService,private emailService:EmailService) {}
 
-  async createContribution(data: Prisma.ContributionCreateInput) {
+  async createContribution(data: Prisma.ContributionCreateInput,cid:string) {
     const member = await this.databaseService.member.findUnique({
       where: {
-        email: 'manishimweemmanuel8gmail.com',
+        cid: cid,
       },
     });
     const activeTypes = await this.databaseService.type.findMany({
@@ -24,16 +25,18 @@ export class ContributionService {
       (await activeTypes).map((type) => {
         contributionData.push({
           typeId: type.id,
-          memberId: member.id,
+          memberId:member.id,
           year: data.year,
           month: data.month,
           amount: (data.amount * type.percentage) / 100,
         });
       });
 
-      return this.databaseService.contribution.createMany({
+      const contribution= this.databaseService.contribution.createMany({
         data: contributionData,
       });
+      await this.emailService.sendContributionReciept(data,member)
+      return contribution;
     } else {
       throw new HttpException(
         `${sum} percentage sum is not equal to 100`,
