@@ -22,7 +22,6 @@ export class MemberService {
       },
     });
 
-
     if (existEmail) {
       throw new HttpException(
         `${data.email} email arleady exist`,
@@ -36,27 +35,51 @@ export class MemberService {
       );
     }
 
-
     try {
       const member = this.databaseService.member.create({
-        data: data
+        data: data,
       });
       await this.emailService.sendMemberWelcome(data);
       return member;
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
-  async findMemberByCid(cid: string) {
+  async findMemberByCid(id: string) {
     return await this.databaseService.member.findUnique({
       where: {
-        cid: cid,
+        id: id,
       },
     });
   }
 
   async findMember() {
     return this.databaseService.member.findMany({
+      include: {
+        family: {
+          select: {
+            names: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findMemberByFamily(familyId: string) {
+    return this.databaseService.member.findMany({
+      where: {
+        familyId: familyId,
+      },
+    });
+  }
+
+  async findFamilyMember(email: string) {
+    const member = await this.databaseService.member.findUnique({
+      where: { email: email },
+    });
+    return this.databaseService.member.findMany({
+      where: {
+        familyId: member.familyId,
+      },
       include: {
         family: {
           select: {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import { Member } from "@/types";
@@ -15,6 +16,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "../ui/checkbox";
 import Link from "next/link";
+import { INewFamilyResponse } from "@/lib/features/family/types";
+import { isFatherUpdate } from "@/lib/features/family/is-father";
+import { useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
+import { isMotherUpdate } from "@/lib/features/family/is-mother";
+import { getCurrentUser } from "@/lib/session";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -43,6 +50,10 @@ export const columns: ColumnDef<Member>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "code",
+    header: "Code",
+  },
+  {
     accessorKey: "names",
     header: "Names",
   },
@@ -69,17 +80,61 @@ export const columns: ColumnDef<Member>[] = [
     header: "Family",
   },
   {
-    accessorKey: "createdAt",
-    header: () => <div className="text-right">Create date</div>,
+    accessorKey: "dob",
+    header: () => <div className="text-left">DOB</div>,
     cell: ({ row }) => {
-      const date = new Date(row.getValue("createdAt"))?.toDateString();
+      const date = new Date(row.getValue("dob"))?.toDateString();
       return date;
     },
   },
   {
+    accessorKey: "joinDate",
+    header: () => <div className="text-left">Join date</div>,
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("joinDate"))?.toDateString();
+      return date;
+    },
+  },
+
+  {
     id: "actions",
+    header: "Action",
     cell: ({ row }) => {
       const member = row.original;
+      const router = useRouter();
+
+      async function isFather(memberId: string) {
+        const response: INewFamilyResponse = await isFatherUpdate(memberId);
+        await router.refresh();
+        if (response.names) {
+          return toast({
+            description: "Family Father updated successful.",
+          });
+        } else {
+          return toast({
+            title: "Something went wrong.",
+            description: `${response.message}. Please try again.`,
+            variant: "destructive",
+          });
+        }
+      }
+
+      async function isMother(memberId: string) {
+        const response: INewFamilyResponse = await isMotherUpdate(memberId);
+        await router.refresh();
+        if (response.names) {
+          return toast({
+            description: "Family Mother updated successful.",
+          });
+        } else {
+          return toast({
+            title: "Something went wrong.",
+            description: `${response.message}. Please try again.`,
+            variant: "destructive",
+          });
+        }
+      }
+
 
       return (
         <DropdownMenu>
@@ -98,9 +153,20 @@ export const columns: ColumnDef<Member>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/new-contribution/${member.cid}`}>
+              <Link href={`/new-contribution/${member.id}`}>
                 New Contribution
               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/member/contributions/${member.id}`}>
+                Contributions
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => isMother(member.id)}>
+              IS Mother
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => isFather(member.id)}>
+              IS Father
             </DropdownMenuItem>
             <DropdownMenuItem>View member details</DropdownMenuItem>
           </DropdownMenuContent>

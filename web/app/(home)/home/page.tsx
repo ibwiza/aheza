@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/lib/session";
 import { getUserContribution } from "@/lib/features/contribution/user-contribution";
 import { Shell } from "@/components/shall";
 import { Header } from "@/components/header";
-import { Contribution } from "@/types";
+import { Contribution, ContributionResponse } from "@/types";
 import { ContributionItem } from "@/components/contribution/contribution-item";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 
@@ -29,9 +29,9 @@ export default async function HomePage() {
       <div>
         {contributions?.length ? (
           <div className="divide-y divide-border rounded-md border">
-            {contributions.map((contribution: Contribution) => (
+            {contributions.map((contribution: ContributionResponse) => (
               <ContributionItem
-                key={contribution.cid}
+                key={contribution.year}
                 contribution={contribution}
               />
             ))}

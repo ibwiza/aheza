@@ -32,7 +32,6 @@ export class TypeService {
         active: true,
         createdAt: true,
         updatedAt: true,
-        contributions: true,
       },
     });
   }

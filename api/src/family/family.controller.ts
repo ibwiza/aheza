@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { FamilyService } from './family.service';
 import { Prisma } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -12,13 +20,23 @@ export class FamilyController {
     return this.familyService.findFamilies();
   }
   // @UseGuards(AuthGuard)
-  @Get(':cid')
-  async findFamilyByCid(@Param('cid') cid: string) {
-    return this.familyService.findFamily(cid);
+  @Get(':id')
+  async findFamilyByCid(@Param('id') id: string) {
+    return this.familyService.findFamily(id);
   }
 
   @Post()
   async createFamily(@Body() data: Prisma.FamilyCreateInput) {
     return this.familyService.createFamily(data);
+  }
+
+  @Patch('father/:memberId')
+  async isFather(@Param('memberId') memberId: string) {
+    return this.familyService.isFather(memberId);
+  }
+
+  @Patch('mother/:memberId')
+  async isMother(@Param('memberId') memberId: string) {
+    return this.familyService.isMother(memberId);
   }
 }

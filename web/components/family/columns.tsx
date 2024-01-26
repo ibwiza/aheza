@@ -2,7 +2,7 @@
 
 import { Family } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import {  MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,8 @@ import Link from "next/link";
 // You can use a Zod schema here if you want.
 
 export const columns: ColumnDef<Family>[] = [
+
+  
   {
     id: "select",
     header: ({ table }) => (
@@ -43,13 +45,33 @@ export const columns: ColumnDef<Family>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "code",
+    header: "Code",
+  },
+  {
     accessorKey: "names",
     header: "Names",
   },
 
   {
+    accessorKey: "dob",
+    header: () => <div className="text-left">DOB</div>,
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("dob"))?.toDateString();
+      return date;
+    },
+  },
+  {
+    accessorKey: "mother",
+    header: "Mother",
+  },
+  {
+    accessorKey: "father",
+    header: "Father",
+  },
+  {
     accessorKey: "createdAt",
-    header: () => <div className="text-right">Create date</div>,
+    header: () => <div className="text-left">Create date</div>,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"))?.toDateString();
       return date;
@@ -57,8 +79,12 @@ export const columns: ColumnDef<Family>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       const family = row.original;
+
+      
+     
 
       return (
         <DropdownMenu>
@@ -77,10 +103,9 @@ export const columns: ColumnDef<Family>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/new-member/${family.cid}`}>
-                Add new member
-              </Link>
+              <Link href={`/new-member/${family.id}`}>Add new member</Link>
             </DropdownMenuItem>
+            
             <DropdownMenuItem>View family details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

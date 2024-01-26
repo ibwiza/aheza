@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { cn } from "@/lib/utils";
-import { userAuthSchema } from "@/lib/validations/auth";
+import { LoginSchema } from "@/lib/validations/auth";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,10 +15,11 @@ import { Icons } from "@/components/icons";
 import { setCookie } from "cookies-next";
 import { signIn } from "@/lib/features/auth/sign-in";
 import { ISignInResponse } from "@/lib/features/auth/types";
+import Link from "next/link";
 
 interface UserSignInFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-type FormData = z.infer<typeof userAuthSchema>;
+type FormData = z.infer<typeof LoginSchema>;
 
 export function UserSignInForm({ className, ...props }: UserSignInFormProps) {
   const {
@@ -26,16 +27,18 @@ export function UserSignInForm({ className, ...props }: UserSignInFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(userAuthSchema),
+    resolver: zodResolver(LoginSchema),
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter();
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
+
     const response: ISignInResponse = await signIn(data);
 
     if (response.statusCode !== 200) {
+      setIsLoading(false);
       return toast({
         title: "Something went wrong.",
         description: `${response.message}. Please try again.`,
@@ -91,11 +94,19 @@ export function UserSignInForm({ className, ...props }: UserSignInFormProps) {
               </p>
             )}
           </div>
+          <p className="px-8 text-left text-sm text-muted-foreground">
+            <Link
+              href="/reset"
+              className="hover:text-brand underline underline-offset-4"
+            >
+              Forget password
+            </Link>
+          </p>
           <button className={cn(buttonVariants())} disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign In to continue
+            Login to continue
           </button>
         </div>
       </form>

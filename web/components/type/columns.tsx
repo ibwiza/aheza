@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import { Type } from "@/types";
@@ -70,9 +71,10 @@ export const columns: ColumnDef<Type>[] = [
     id: "actions",
     cell: ({ row }) => {
       const type = row.original;
-      const router = useRouter();
 
       async function activate(active: boolean, cid: string) {
+        const router = useRouter();
+
         const response: INewTypeResponse = await activeType(active, cid);
 
         await router.refresh();

@@ -1,8 +1,37 @@
 import { DashboardConfig } from "@/types";
 
 export const contributionConfig: DashboardConfig = {
+  mainNav: [],
+  sidebarNav: [
+    {
+      title: "Contributions",
+      href: "/dashboard",
+      icon: "post",
+    },
+    {
+      title: "Configuration",
+      href: "/dashboard/configuration",
+      icon: "billing",
+    },
+    {
+      title: "Families",
+      href: "/dashboard/family",
+      icon: "billing",
+    },
+    {
+      title: "Settings",
+      href: "/dashboard/settings",
+      icon: "settings",
+    },
+  ],
+};
+
+export const parentConfig: DashboardConfig = {
   mainNav: [
-  
+    {
+      title: "Members",
+      href: "/member",
+    },
   ],
   sidebarNav: [
     {

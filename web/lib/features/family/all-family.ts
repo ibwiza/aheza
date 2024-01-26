@@ -1,4 +1,3 @@
-import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
 
 export async function getAllMFamily() {
@@ -16,3 +15,5 @@ export async function getAllMFamily() {
   const jsonResponse = await response.json();
   return jsonResponse;
 }
+
+

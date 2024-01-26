@@ -3,13 +3,13 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import { Header } from "@/components/header";
 import { Shell } from "@/components/shall";
-import { ContributionForm } from "@/components/contribution/create-contribution-form";
+import { EditFamilyForm } from "@/components/family/edit-family-form";
 
 export const metadata = {
-  title: "New Contribution",
+  title: "Edit Family",
 };
 
-export default async function NewContributionPage() {
+export default async function EditFamilyPage() {
   const user = await getCurrentUser();
 
   if (!user) {
@@ -18,9 +18,9 @@ export default async function NewContributionPage() {
 
   return (
     <Shell>
-      <Header heading="Contribution" text="Create new contribtion " />
+      <Header heading="Family" text="Create new family " />
       <div className="grid gap-10">
-        <ContributionForm />
+        <EditFamilyForm />
       </div>
     </Shell>
   );

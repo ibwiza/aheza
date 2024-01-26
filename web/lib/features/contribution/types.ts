@@ -1,9 +1,13 @@
 export type IMutateNewContribution = {
-  amount: number;
   year: number;
-  month: number;
+  amount: number;
+};
+
+export type IMutateYearContribution = {
+  year: number;
+  memberId: string;
 };
 
 export type INewContributionResponse = {
-  count: number;
+  id: string;
 };

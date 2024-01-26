@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { DEV_URL, cn } from "@/lib/utils";
-import { userAuthSchema } from "@/lib/validations/auth";
+import { RegisterSchema } from "@/lib/validations/auth";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +17,7 @@ import { signUp } from "@/lib/features/auth/sign-up";
 
 interface UserSignUpFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-type FormData = z.infer<typeof userAuthSchema>;
+type FormData = z.infer<typeof RegisterSchema>;
 
 export function UserSignUpForm({ className, ...props }: UserSignUpFormProps) {
   const {
@@ -25,7 +25,7 @@ export function UserSignUpForm({ className, ...props }: UserSignUpFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(userAuthSchema),
+    resolver: zodResolver(RegisterSchema),
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -37,6 +37,7 @@ export function UserSignUpForm({ className, ...props }: UserSignUpFormProps) {
     const response: ISignUpResponse = await signUp(data);
 
     if (response.statusCode !== 200) {
+      setIsLoading(false)
       return toast({
         title: "Something went wrong.",
         description: `${response.message}. Please try again.`,
@@ -56,6 +57,25 @@ export function UserSignUpForm({ className, ...props }: UserSignUpFormProps) {
     <div className={cn("grid gap-6", className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-5">
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="name">
+              Email
+            </Label>
+            <Input
+              id="name"
+              placeholder="Full name"
+              type="name"
+              autoCapitalize="none"
+              autoComplete="name"
+              autoCorrect="off"
+              disabled={isLoading}
+              {...register("name")}
+            />
+            {errors?.name && (
+              <p className="px-1 text-xs text-red-600">{errors.name.message}</p>
+            )}
+          </div>
+
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
               Email

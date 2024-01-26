@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +9,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "@/types";
 import { UserAvatar } from "./user-avatar";
+import { signOut } from "@/lib/features/auth/sign-out";
+import { useRouter } from "next/navigation";
+import { deleteCookie } from "cookies-next";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user: Pick<User, "names" | "email">;
 }
 
 export function UserAccountNav({ user }: UserAccountNavProps) {
+  const router = useRouter();
+
+  async function logout() {
+    deleteCookie("key");
+
+    router.push("/sign-in");
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -39,15 +48,7 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
         <DropdownMenuSeparator />
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onSelect={(event) => {
-            // event.preventDefault()
-            // signOut({
-            //   callbackUrl: `${window.location.origin}/login`,
-            // })
-          }}
-        >
+        <DropdownMenuItem className="cursor-pointer" onClick={() => logout()}>
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -42,21 +42,23 @@ export function ContributionForm({
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter();
-  const params = useParams<{ tag: string; item: string }>();
+  const params = useParams<{ tag: string; memberId: string }>();
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
+
     const response: INewContributionResponse = await newContribution(
       data,
-      params.memberCid
+      params.memberId
     );
 
-    if (response.count === 3) {
+    if (response.id) {
       await router.push("/member");
       return toast({
         description: "New contribution was saved successful.",
       });
     } else {
+      setIsLoading(false);
       return toast({
         title: "Something went wrong.",
         description: `Failed to save new contribution. Please try again.`,
@@ -75,25 +77,6 @@ export function ContributionForm({
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-5">
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="month">
-              Month
-            </Label>
-            <Input
-              id="month"
-              placeholder="Month"
-              type="number"
-              className="w-[600px]"
-              size={32}
-              disabled={isLoading}
-              {...register("month", { valueAsNumber: true })}
-            />
-            {errors?.month && (
-              <p className="px-1 text-xs text-red-600">
-                {errors.month.message}
-              </p>
-            )}
-          </div>
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="year">
               Year

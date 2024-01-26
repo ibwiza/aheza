@@ -13,6 +13,7 @@ import { jwt_config } from './auth/config/jwt';
 import { JwtStrategy } from './auth/jwt-strategy';
 import { AuthService } from './auth/auth.service';
 import { ConfigModule } from '@nestjs/config';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
     TypeModule,
     ContributionModule,
     AuthModule,
+    EmailModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
       property: 'user',

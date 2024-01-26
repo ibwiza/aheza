@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import { Header } from "@/components/header";
 import { Shell } from "@/components/shall";
-import { FamilyForm } from "@/components/family/create-family-form";
+import { FamilyForm } from "@/components/family/family-form";
 import { TypeForm } from "@/components/type/create-type-form";
 
 export const metadata = {
@@ -11,8 +11,6 @@ export const metadata = {
 };
 
 export default async function NewTypePage() {
-
-
   return (
     <Shell>
       <Header heading="Type" text="Create new contribition type " />

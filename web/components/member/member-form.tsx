@@ -41,7 +41,7 @@ export function MemberForm({ className, ...props }: MemberFormProps) {
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter();
-  const params = useParams<{ tag: string; item: string }>();
+  const params = useParams<{ tag: string; familyId: string }>();
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
@@ -49,13 +49,14 @@ export function MemberForm({ className, ...props }: MemberFormProps) {
 
     const response: INewMemberResponse = await newMember(data, family.id);
 
-    await router.push("/member");
-
     if (response.email) {
+      await router.push("/member");
+
       return toast({
         description: "New Member was saved successful.",
       });
     } else {
+      setIsLoading(false);
       return toast({
         title: "Something went wrong.",
         description: `${response.message}. Please try again.`,
@@ -75,7 +76,7 @@ export function MemberForm({ className, ...props }: MemberFormProps) {
         </CardHeader>
         <CardContent className="grid gap-5">
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="names">
+            <Label className="" htmlFor="names">
               Names
             </Label>
             <Input
@@ -94,7 +95,7 @@ export function MemberForm({ className, ...props }: MemberFormProps) {
             )}
           </div>
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
+            <Label className="" htmlFor="email">
               Email
             </Label>
             <Input
@@ -113,7 +114,7 @@ export function MemberForm({ className, ...props }: MemberFormProps) {
             )}
           </div>
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="phone">
+            <Label className="" htmlFor="phone">
               Phone
             </Label>
             <Input
@@ -128,6 +129,60 @@ export function MemberForm({ className, ...props }: MemberFormProps) {
             {errors?.phone && (
               <p className="px-1 text-xs text-red-600">
                 {errors.phone.message}
+              </p>
+            )}
+          </div>
+          <div className="grid gap-1">
+            <Label className="" htmlFor="code">
+              Code
+            </Label>
+            <Input
+              id="code"
+              placeholder="CODE"
+              type="text"
+              className="w-[600px]"
+              size={32}
+              disabled={isLoading}
+              {...register("code")}
+            />
+            {errors?.code && (
+              <p className="px-1 text-xs text-red-600">{errors.code.message}</p>
+            )}
+          </div>
+          <div className="grid gap-1">
+            <Label className="" htmlFor="dob">
+              DOB
+            </Label>
+            <Input
+              id="dob"
+              placeholder="DOB"
+              type="date"
+              className="w-[600px]"
+              size={32}
+              disabled={isLoading}
+              {...register("dob", { valueAsDate: true })}
+            />
+            {errors?.dob && (
+              <p className="px-1 text-xs text-red-600">{errors.dob.message}</p>
+            )}
+          </div>
+
+          <div className="grid gap-1">
+            <Label className="" htmlFor="joinDate">
+              Join Date
+            </Label>
+            <Input
+              id="joinDate"
+              placeholder="Join Date"
+              type="date"
+              className="w-[600px]"
+              size={32}
+              disabled={isLoading}
+              {...register("joinDate", { valueAsDate: true })}
+            />
+            {errors?.joinDate && (
+              <p className="px-1 text-xs text-red-600">
+                {errors.joinDate.message}
               </p>
             )}
           </div>

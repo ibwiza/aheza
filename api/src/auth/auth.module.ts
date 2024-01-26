@@ -5,9 +5,11 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt-strategy';
 import { jwt_config } from './config/jwt';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
   imports: [
+    EmailModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
       property: 'user',

@@ -1,6 +1,11 @@
 import { notFound, redirect } from "next/navigation";
 
-import { adminConfig, clarkConfig, contributionConfig } from "@/config/dashboard";
+import {
+  adminConfig,
+  clarkConfig,
+  contributionConfig,
+  parentConfig,
+} from "@/config/dashboard";
 import { MainNav } from "@/components/layout/marketing/main-nav";
 import { getCurrentUser } from "@/lib/session";
 import { SiteFooter } from "@/components/layout/marketing/site-footer";
@@ -18,19 +23,20 @@ export default async function FamilyLayout({ children }: FamilyLayoutProps) {
     redirect("/sign-in");
   }
 
-
   return (
     <div className="flex min-h-screen flex-col space-y-6">
       <header className="sticky top-0 z-40 border-b bg-background">
         <div className="container flex h-16 items-center justify-between py-4">
           <div>
             {(() => {
-              if (user.role === "CONTRIBUTOR") {
+              if (user.role === "USER") {
                 return <MainNav items={contributionConfig.mainNav} />;
               } else if (user.role === "CLARK") {
                 return <MainNav items={clarkConfig.mainNav} />;
               } else if (user.role === "ADMIN") {
                 return <MainNav items={adminConfig.mainNav} />;
+              } else if (user.role === "PARENT") {
+                return <MainNav items={parentConfig.mainNav} />;
               }
             })()}
           </div>

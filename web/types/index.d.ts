@@ -70,12 +70,17 @@ export type User = {
 };
 
 export type Contribution = {
-  cid: string;
+  id: string;
   year: number;
   month: number;
   amount: number;
-  type: Type;
+  paymentMethod: string;
   createdAt: Date;
+};
+export type ContributionResponse = {
+  year: number;
+  _sum: any;
+  memberId: string;
 };
 
 export type Type = {
@@ -83,11 +88,12 @@ export type Type = {
   names: string;
   percentage: number;
   createdAt: Date;
-
 };
 export type Family = {
-  cid: string;
+  id: string;
   names: string;
+  code: string;
+  dob: Date;
 };
 
 export type Member = {

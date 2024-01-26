@@ -1,7 +1,7 @@
 import { IMutateNewMember } from "./types";
 
 export async function newMember(data: IMutateNewMember, familyId: number) {
-  const { email, names, phone } = data;
+  const { email, names, phone, code, dob, joinDate } = data;
 
   const response = await fetch(`http://localhost:4000/member/`, {
     method: "POST",
@@ -10,6 +10,9 @@ export async function newMember(data: IMutateNewMember, familyId: number) {
       email,
       names,
       phone,
+      code,
+      dob,
+      joinDate,
       familyId: familyId,
     }),
   });

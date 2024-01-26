@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -11,24 +11,41 @@ import { buttonVariants } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { familySchema } from "@/lib/validations/family";
-import { newFamily } from "@/lib/features/family/new-family";
+import { getFamily } from "@/lib/features/family/get-family";
 import { INewFamilyResponse } from "@/lib/features/family/types";
+import { newFamily } from "@/lib/features/family/new-family";
+import { toast } from "../ui/use-toast";
+import { Family } from "@/types";
 
 interface FamilyFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 type FormData = z.infer<typeof familySchema>;
 
-export function FamilyForm({ className, ...props }: FamilyFormProps) {
+import { use } from "react";
+
+async function findFamily(familyId: string) {
+  return await getFamily(familyId);
+}
+
+export function EditFamilyForm({ className, ...props }: FamilyFormProps) {
+  const params = useParams<{ tag: string; familyId: string }>();
+
+  const family = use(findFamily(params.familyId));
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(familySchema),
+    defaultValues: {
+      names: family.names,
+      code: family.code,
+      dob: family.dob,
+    },
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter();
@@ -77,6 +94,25 @@ export function FamilyForm({ className, ...props }: FamilyFormProps) {
               </p>
             )}
           </div>
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="names">
+              Code
+            </Label>
+            <Input
+              id="names"
+              placeholder="CODE"
+              type="text"
+              className="w-[600px]"
+              size={32}
+              disabled={isLoading}
+              {...register("code")}
+            />
+            {errors?.code && (
+              <p className="px-1 text-xs text-red-600">{errors.code.message}</p>
+            )}
+          </div>
+
+
         </CardContent>
         <CardFooter>
           <button className={cn(buttonVariants())} disabled={isLoading}>
